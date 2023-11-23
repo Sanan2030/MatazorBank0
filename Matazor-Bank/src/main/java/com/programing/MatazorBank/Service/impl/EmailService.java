@@ -4,4 +4,5 @@ import com.programing.MatazorBank.Dto.EmailDetails;
 
 public interface EmailService {
   void SendEmail(EmailDetails emailDetails);
+  void SendEmailAttachment(EmailDetails emailDetails);
 }
