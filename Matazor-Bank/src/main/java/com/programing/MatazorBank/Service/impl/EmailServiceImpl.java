@@ -12,7 +12,6 @@ public class EmailServiceImpl implements EmailService{
     private JavaMailSender javaMailSender;
     @Value("${spring.mail.username}")
     private String SendEmail;
-
     @Override
     public void SendEmail(EmailDetails emailDetails) {
         try {
@@ -27,7 +26,6 @@ public class EmailServiceImpl implements EmailService{
         catch (MailException e){
 throw new RuntimeException(e);
         }
-
     }
 }
 

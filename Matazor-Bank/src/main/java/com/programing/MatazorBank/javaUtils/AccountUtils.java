@@ -2,7 +2,7 @@ package com.programing.MatazorBank.javaUtils;
 
 import java.time.Year;
 
-public class AccountUtils {
+public class  AccountUtils {
     public static final String ACCOUNT_EXISTS_CODE="101";
     public static final String ACCOUNT_EXISTS_MESSAGE="Account already exists";
     public static final String ACCOUNT_CREATIONS_CODE="002";
@@ -10,7 +10,6 @@ public class AccountUtils {
     public static final String ACCOUNT_NOT_EXISTS_CODE="003";
     public static final String ACCOUNT_NOT_EXISTS_MESSAGE="User with The  provided AccountNumber are not exist";
     public static final String ACCOUNT_FOND_CODE="004";
-
     public static final String ACCOUNT_FOND_MESSAGE="User founded";
     public static final String ACCOUNT_CREDIT_CODE="005";
     public static final String ACCOUNT_CREDIT_MESSAGE="Credit successes";

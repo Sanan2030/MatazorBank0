@@ -24,7 +24,6 @@ public class UserController {
     @PostMapping
     public BankResponse CreateAccount(@RequestBody UserRequest userRequest){
         return userService.CreateAccount(userRequest);
-
     }
     @Operation(
             summary = "NameEnquiry",
@@ -38,18 +37,50 @@ public class UserController {
     public BankResponse nameEnquiry(@RequestBody EnquiryRequest enquiryRequest){
         return (BankResponse) userService.nameEnquiry(enquiryRequest);
     }
+    @Operation(
+            summary = "BalanceEnquiry",
+            description = "Given an account Number,check the Balance of User"
+    )
+    @ApiResponse(
+            responseCode = "202",
+            description = "Http Status 202 SUCSESS"
+    )
     @GetMapping("balanceEnquiry")
     public BankResponse BalanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
         return userService.BalanceEnquiry(enquiryRequest);
     }
+    @Operation(
+            summary = "Credit Account",
+            description = "Given an account Number,and increase accountBalance"
+    )
+    @ApiResponse(
+            responseCode = "203",
+            description = "Http Status 203 SUCSESS"
+    )
     @PostMapping("credit")
     public BankResponse creditAccount(@RequestBody CreditDebitRequest request){
         return userService.creditAccount(request);
     }
+    @Operation(
+            summary = "Debit account",
+            description = "Given an account Number,and debit accountBalance"
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "Http Status 204 SUCSESS"
+    )
     @PostMapping("debit")
     public BankResponse debitAccount(@RequestBody CreditDebitRequest request){
         return userService.debitAccount(request);
     }
+    @Operation(
+            summary = "Transfer",
+            description = "Transfer amount form sourceAccountNumber to destinationAccountNumber "
+    )
+    @ApiResponse(
+            responseCode = "205",
+            description = "Http Status 205 SUCSESS"
+    )
     @PostMapping("transfer")
     public BankResponse transfer(@RequestBody TransferRequest request){
         return userService.transfer(request);

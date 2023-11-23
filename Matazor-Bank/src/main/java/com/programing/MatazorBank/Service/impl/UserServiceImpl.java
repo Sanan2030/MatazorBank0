@@ -1,14 +1,15 @@
 package com.programing.MatazorBank.Service.impl;
 
 import com.programing.MatazorBank.Dto.*;
-import com.programing.MatazorBank.Service.impl.TransactionService;
 import com.programing.MatazorBank.Entity.User;
 import com.programing.MatazorBank.Repository.UserRepository;
 import com.programing.MatazorBank.javaUtils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -123,7 +124,6 @@ public class UserServiceImpl implements UserService {
                         .build())
                 .build();
     }
-
     @Override
     public BankResponse debitAccount(CreditDebitRequest request) {
         boolean isAccountExist = userRepository.existsByAccountNumber(request.getAccountNumber());
