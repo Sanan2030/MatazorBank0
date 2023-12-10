@@ -1,10 +1,16 @@
 package com.programing.MatazorBank.Service.impl;
 
 import com.programing.MatazorBank.Dto.*;
+import com.programing.MatazorBank.Entity.Role;
 import com.programing.MatazorBank.Entity.User;
 import com.programing.MatazorBank.Repository.UserRepository;
+import com.programing.MatazorBank.config.JwtTokenPProvider;
 import com.programing.MatazorBank.javaUtils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +25,14 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
    @Autowired
    TransactionService transactionService;
+   @Autowired
+    PasswordEncoder passwordEncoder;
+   @Autowired
+   AuthenticationManager authenticationManager;
+   @Autowired
+    JwtTokenPProvider jwtTokenPProvider;
+
+
     private BankResponse createErrorResponse() {
         return BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_NOT_EXISTS_CODE)
@@ -46,16 +60,18 @@ public class UserServiceImpl implements UserService {
                 .accountNumber(AccountUtils.generateAccountNumber())
                 .accountBalance(BigDecimal.ZERO)
                 .email(userRequest.getEmail())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .PhoneNumber(userRequest.getPhoneNumber())
                 .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
                 .Status("Active")
+                .role(Role.ROLE_Admin)
                 .build();
         User savedUser = userRepository.save(newUser);
         EmailDetails emailDetails = EmailDetails.builder()
                 .recipient(savedUser.getEmail())
                 .subject("ACCOUNT CREATION")
-                .MessageBody("Congratulations! Your account has " + "been sucsessfuly created\n+" +
-                        "+Your account details:\n" + "Account Name " + savedUser.getFirstName() + " " +
+                .MessageBody("Congratulations! Your account has " + "been successfully created\n+" +
+                        "Your account details:\n" + "Account Name:" + savedUser.getFirstName() + " " +
                         savedUser.getLastName() + " " + savedUser.getOtherName() + "\nAccount Number:" +
                         savedUser.getAccountNumber()).build();
         emailService.SendEmail(emailDetails);
@@ -69,6 +85,23 @@ public class UserServiceImpl implements UserService {
                         .build())
                 .build();
     }
+    public BankResponse login(LoginDTO loginDTO){
+        Authentication authentication;
+        authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
+        EmailDetails.EmailDetailsBuilder builder = EmailDetails.builder();
+        builder.subject("You logged in !");
+        builder.recipient(loginDTO.getEmail());
+        builder.MessageBody("You logged into your account at " + " If you didn't this request,Contact with Bank");
+        EmailDetails loginAlert= builder
+                .build();
+        emailService.SendEmail(loginAlert);
+        return BankResponse.builder()
+        .responseCode("Login Success")
+                        .responseMessage(jwtTokenPProvider.generateToken(authentication))
+                .build();
+
+    }
+
     @Override
     public BankResponse BalanceEnquiry(EnquiryRequest request) {
         boolean isAccountExist = userRepository.existsByAccountNumber(request.getAccountNumber());
@@ -87,6 +120,7 @@ public class UserServiceImpl implements UserService {
                         .build())
                 .build();
     }
+
     @Override
     public BankResponse nameEnquiry(EnquiryRequest request) {
         boolean isAccountExist = userRepository.existsByAccountNumber(request.getAccountNumber());
@@ -98,6 +132,7 @@ public class UserServiceImpl implements UserService {
                         .AccountName(foundUser.getFirstName() + " " +
                                 foundUser.getLastName() + " " + foundUser.getOtherName()).build()).build();
     }
+
     @Override
     public BankResponse creditAccount(CreditDebitRequest request) {
         boolean isAccountExist = userRepository.existsByAccountNumber(request.getAccountNumber());
@@ -124,6 +159,7 @@ public class UserServiceImpl implements UserService {
                         .build())
                 .build();
     }
+
     @Override
     public BankResponse debitAccount(CreditDebitRequest request) {
         boolean isAccountExist = userRepository.existsByAccountNumber(request.getAccountNumber());
@@ -160,6 +196,7 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
     }
+
     @Override
     public BankResponse transfer(TransferRequest request) {
         boolean isDestinationAccountExist = userRepository.existsByAccountNumber(request.getDestinationAccountNumber());
@@ -204,5 +241,6 @@ public class UserServiceImpl implements UserService {
                 .responseMessage(AccountUtils.TRANSFER_SUCCESSES_MESSAGE)
                 .accountInfo(null)
                 .build();
+
     }
 }

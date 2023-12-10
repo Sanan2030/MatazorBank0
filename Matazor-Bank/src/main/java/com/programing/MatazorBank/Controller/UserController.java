@@ -1,5 +1,4 @@
 package com.programing.MatazorBank.Controller;
-
 import com.programing.MatazorBank.Dto.*;
 import com.programing.MatazorBank.Service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +23,11 @@ public class UserController {
     @PostMapping
     public BankResponse CreateAccount(@RequestBody UserRequest userRequest){
         return userService.CreateAccount(userRequest);
+
+    }
+    @PostMapping("/login")
+    public BankResponse login(@RequestBody LoginDTO loginDTO){
+        return userService.login(loginDTO);
     }
     @Operation(
             summary = "NameEnquiry",
@@ -33,7 +37,7 @@ public class UserController {
             responseCode = "200",
             description = "Http Status 200 SUCSESS"
     )
-    @GetMapping("nameEnquiry")
+    @GetMapping("/nameEnquiry")
     public BankResponse nameEnquiry(@RequestBody EnquiryRequest enquiryRequest){
         return (BankResponse) userService.nameEnquiry(enquiryRequest);
     }
@@ -45,7 +49,7 @@ public class UserController {
             responseCode = "202",
             description = "Http Status 202 SUCSESS"
     )
-    @GetMapping("balanceEnquiry")
+    @GetMapping("/balanceEnquiry")
     public BankResponse BalanceEnquiry(@RequestBody EnquiryRequest enquiryRequest){
         return userService.BalanceEnquiry(enquiryRequest);
     }
@@ -57,7 +61,7 @@ public class UserController {
             responseCode = "203",
             description = "Http Status 203 SUCSESS"
     )
-    @PostMapping("credit")
+    @PostMapping("/credit")
     public BankResponse creditAccount(@RequestBody CreditDebitRequest request){
         return userService.creditAccount(request);
     }
@@ -69,7 +73,7 @@ public class UserController {
             responseCode = "204",
             description = "Http Status 204 SUCSESS"
     )
-    @PostMapping("debit")
+    @PostMapping("/debit")
     public BankResponse debitAccount(@RequestBody CreditDebitRequest request){
         return userService.debitAccount(request);
     }
@@ -81,12 +85,8 @@ public class UserController {
             responseCode = "205",
             description = "Http Status 205 SUCSESS"
     )
-    @PostMapping("transfer")
+    @PostMapping("/transfer")
     public BankResponse transfer(@RequestBody TransferRequest request){
         return userService.transfer(request);
     }
-
-
-
-
 }
