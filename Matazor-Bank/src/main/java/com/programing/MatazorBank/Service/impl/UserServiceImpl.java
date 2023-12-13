@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         EmailDetails.EmailDetailsBuilder builder = EmailDetails.builder();
         builder.subject("You logged in !");
         builder.recipient(loginDTO.getEmail());
-        builder.MessageBody("You logged into your account at " + " If you didn't this request,Contact with Bank");
+        builder.MessageBody("You logged into your account. If you didn't make this request,contact with MatazorBank");
         EmailDetails loginAlert= builder
                 .build();
         emailService.SendEmail(loginAlert);
